@@ -20,6 +20,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -29,18 +30,78 @@ const {width, height} = Dimensions.get('window');
 export default function App() {
   const [todo, setTodos] = React.useState([
     {id: 1, task: 'clean the house', completed: true},
-    {id: 2, task: 'kick some asses', completed: true},
+    {id: 2, task: 'kick some asses', completed: false},
   ]);
+
+  const [textInput, setTextInput] = React.useState('');
 
   const ListItem = ({todo}) => {
     return (
-    <View style={styles.listItem}>
-      <View>
-        <Text>{todo?.task}</Text>
+      <View style={styles.listItem}>
+        <View style={{flex: 1}}>
+          <View>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 16,
+                textDecorationLine: todo?.completed ? 'line-through' : 'none',
+              }}>
+              {todo?.task}
+            </Text>
+          </View>
+        </View>
+        {!todo?.completed && (
+          <TouchableOpacity style={[styles.actionIcon]}>
+            <Icon name="done" size={20} color={'white'} />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={[styles.actionIcon, {backgroundColor: 'red'}]}
+          onPress={() => deleteTodo(todo?.id)}>
+          <Icon name="delete" size={20} color={'white'} />
+        </TouchableOpacity>
       </View>
-    </View>
-    
     );
+  };
+
+  const addTodo = () => {
+    if (textInput == '') {
+      Alert.alert('Error', 'Please input todo');
+    } else {
+      const newTodo = {
+        id: Math.random(),
+        task: textInput,
+        completed: false,
+      };
+      setTodos([...todo, newTodo]);
+      setTextInput('');
+    }
+  };
+
+  const markTodoComplete = todoId => {
+    const newTodos = todos.map(item => {
+      if (item.id == todoId) {
+        return {...item, completed: true};
+      }
+      return item;
+    });
+    setTodos(newTodos);
+  };
+
+  const deleteTodo = todoId => {
+    const newTodos = todos.filter(item => item.id != todoId);
+    setTodos(newTodos);
+  };
+
+  const clearTodos = todoId => {
+    Alert.alert('Confirm', 'Clear todos?', [
+      {
+        text: 'Yes',
+        onPress: () => setTodos([]),
+      },
+      {text: 'No'},
+      ]);
   };
   return (
     <React.Fragment>
@@ -48,24 +109,28 @@ export default function App() {
         <View style={styles.header}>
           <StatusBar backgroundColor="#61dafb" />
           <Text style={styles.text}>Your Plan Today</Text>
-          <Icon name="delete" color="red" size={25} />
+          <Icon name="delete" color="red" size={25} onPress={clearTodos} />
         </View>
-      
-      <View style={styles.bodyContainer}>
-        <View style={styles.body}></View>
-      </View>
-      <FlatList
-        showVerticalScrollIndicator={false}
-        contentContainerStyle={{padding: 20, paddingBottom: 100}}
-        data={todo}
-        renderItem={({item}) => <ListItem todo={item} />}
-      />
+
+        <View style={styles.bodyContainer}>
+          <View style={styles.body}></View>
+        </View>
+        <FlatList
+          showVerticalScrollIndicator={false}
+          contentContainerStyle={{padding: 20, paddingBottom: 100}}
+          data={todo}
+          renderItem={({item}) => <ListItem todo={item} />}
+        />
       </SafeAreaView>
       <SafeAreaView style={styles.footer}>
         <View style={styles.inputContainer}>
-          <TextInput placeholder="Add your plan"></TextInput>
+          <TextInput
+            placeholder="Add your plan"
+            value={textInput}
+            onChangeText={text => setTextInput(text)}
+          />
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={addTodo}>
           <View style={styles.iconContainer}>
             <Icon name="add" color="#ff6347" size={30} />
           </View>
@@ -134,5 +199,16 @@ const styles = StyleSheet.create({
     elevation: 12,
     borderRadius: 7,
     marginVertical: 10,
+  },
+
+  // Action Icons
+  actionIcon: {
+    height: 25,
+    width: 25,
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    marginLeft: 5,
   },
 });
