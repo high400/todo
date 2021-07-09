@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const {width, height} = Dimensions.get('window');
 
 export default function App() {
@@ -32,8 +32,16 @@ export default function App() {
     {id: 1, task: 'clean the house', completed: false},
     {id: 2, task: 'kick some asses', completed: false},
   ]);
+  React.useEffect(() => {
+    getTodoFromUserDevice(todo);
+  }, [todo]);
+  React.useEffect(() => {
+    saveTodoTouserDevice(todo);
+  }, [todo]);
 
   const [textInput, setTextInput] = React.useState('');
+
+
 
   const ListItem = ({todo}) => {
     return (
@@ -63,6 +71,25 @@ export default function App() {
         </TouchableOpacity>
       </View>
     );
+  };
+
+  const saveTodoTouserDevice = async todo => {
+    try {
+      const jsonValue = JSON.stringify(todo);
+      await AsyncStorage.setItem('todo', stringifyTodo);
+    } catch (e) {
+        console.log(e);
+    }
+  };
+  const getTodoFromUserDevice = async () => {
+    try {
+      const todo = await AsyncStorage.getItem('todo');
+      if (todo != null) {
+          setTodo(JSON.parse(todo));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const addTodo = () => {
