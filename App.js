@@ -28,8 +28,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const {width, height} = Dimensions.get('window');
 
 export default function App() {
-  const [todo, setTodos] = React.useState([
-    {id: 1, task: 'clean the house', completed: true},
+  const [todo, setTodo] = React.useState([
+    {id: 1, task: 'clean the house', completed: false},
     {id: 2, task: 'kick some asses', completed: false},
   ]);
 
@@ -74,31 +74,31 @@ export default function App() {
         task: textInput,
         completed: false,
       };
-      setTodos([...todo, newTodo]);
+      setTodo([...todo, newTodo]);
       setTextInput('');
     }
   };
 
   const markTodoComplete = todoId => {
-    const newTodos = todos.map(item => {
+    const newTodo = todo.map(item => {
       if (item.id == todoId) {
         return {...item, completed: true};
       }
       return item;
     });
-    setTodos(newTodos);
+    setTodo(newTodo);
   };
 
   const deleteTodo = todoId => {
     const newTodo = todo.filter(item => item.id != todoId);
-    setTodos(newTodo);
+    setTodo(newTodo);
   };
 
-  const clearTodos = todoId => {
-    Alert.alert('Confirm', 'Clear todos?', [
+  const clearTodo = todoId => {
+    Alert.alert('Confirm', 'Clear todo?', [
       {
         text: 'Yes',
-        onPress: () => setTodos([]),
+        onPress: () => setTodo([]),
       },
       {text: 'No'},
       ]);
@@ -109,7 +109,7 @@ export default function App() {
         <View style={styles.header}>
           <StatusBar backgroundColor="#61dafb" />
           <Text style={styles.text}>Your Plan Today</Text>
-          <Icon name="delete" color="red" size={25} onPress={clearTodos} />
+          <Icon name="delete" color="red" size={25} onPress={clearTodo} />
         </View>
 
         <View style={styles.bodyContainer}>
