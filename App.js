@@ -90,8 +90,8 @@ export default function App() {
   };
 
   const deleteTodo = todoId => {
-    const newTodos = todos.filter(item => item.id != todoId);
-    setTodos(newTodos);
+    const newTodo = todo.filter(item => item.id != todoId);
+    setTodos(newTodo);
   };
 
   const clearTodos = todoId => {
