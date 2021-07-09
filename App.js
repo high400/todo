@@ -135,7 +135,7 @@ export default function App() {
       <SafeAreaView style={styles.headerContainer}>
         <View style={styles.header}>
           <StatusBar backgroundColor="#61dafb" />
-          <Text style={styles.text}>Your Plan Today</Text>
+          <Text style={styles.text}>Write down your plan here</Text>
           <Icon name="delete" color="red" size={25} onPress={clearTodo} />
         </View>
 
@@ -152,7 +152,7 @@ export default function App() {
       <SafeAreaView style={styles.footer}>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Add your plan"
+            placeholder="Add your next plan"
             value={textInput}
             onChangeText={text => setTextInput(text)}
           />
