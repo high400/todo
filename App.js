@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 
 import {
   SafeAreaView,
@@ -33,8 +33,8 @@ export default function App() {
     {id: 2, task: 'kick some asses', completed: false},
   ]);
   React.useEffect(() => {
-    getTodoFromUserDevice(todo);
-  }, [todo]);
+    getTodoFromUserDevice();
+  }, []);
   React.useEffect(() => {
     saveTodoTouserDevice(todo);
   }, [todo]);
@@ -75,7 +75,7 @@ export default function App() {
 
   const saveTodoTouserDevice = async todo => {
     try {
-      const jsonValue = JSON.stringify(todo);
+      const stringifyTodo = JSON.stringify(todo);
       await AsyncStorage.setItem('todo', stringifyTodo);
     } catch (e) {
         console.log(e);
